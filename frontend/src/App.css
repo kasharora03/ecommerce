@@ -25,11 +25,18 @@
   margin: 5px;
   width: 300px;
 }
-.signup {
+.signup , .product{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.nav-right{
+  text-align: right;
+}
+.logo{
+  width:50px;
+  float:left
 }
 .inputbtn{
   padding: 5px;
@@ -45,4 +52,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center; 
+}
+.sp{
+  color: red;
+  display: block;
+  margin-left: -15rem;
+  margin-top: -10px;
+  opacity: 0.8;
+}
+.product-list{
+  text-align: center;
+  margin-top: 50px;
+}
+.product-list ul li{
+  display: inline-block;
+  padding: 5px;
+  width: 150px;
+  border: 1px solid skyblue;
+}
+.product-list ul{
+  margin: 0;
 }
