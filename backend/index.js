@@ -4,6 +4,8 @@ const app = express();
 require('./db/config');
 const User = require('./db/Users');
 const Product = require('./db/Product')
+const Jwt = require('jsonwebtoken');
+const jwtkey = 'e-comm';
 
 app.use(express.json());
 app.use(cors()); //to resolve api integration issue
@@ -21,7 +23,13 @@ app.post('/login',async (req,res)=>{
     if(req.body.password && req.body.email){
         let user = await User.findOne(req.body).select("-password");
         if(user){
-            res.send(user)
+            
+            Jwt.sign({user},jwtkey,{expiresIn:"2h"},(err,token)=>{
+                if(err){
+                    res.send('something went wrong')
+                }
+                res.send(user,{auth:token})
+            })
         }else{
             res.send({result:'no user found'})
         }
@@ -57,6 +65,22 @@ app.get('/product/:id',async(req,res)=>{
     }else{
         res.send('no result')
     }
+})
+app.put('/product/:id',async(req,res)=>{
+    let result = await Product.updateOne(
+        {_id:req.params.id},
+        {$set:req.body}
+    )
+    res.send(result)
+});
+app.get('/search/:key',async(req,res)=>{
+    let result=await Product.find({
+        $or:[{name:{ $regex :req.params.key}},
+            {company:{ $regex :req.params.key}},
+            {category:{ $regex :req.params.key}}
+        ]
+    });
+    res.send(result);
 })
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
