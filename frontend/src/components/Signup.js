@@ -12,7 +12,7 @@ const Signup = () => {
     if (auth) {
       navigate('/')
     }
-  })
+  });
 
 
   const collectData = async () => {
@@ -28,7 +28,8 @@ const Signup = () => {
     console.warn(result);
       navigate('/');
       // saves data after refresh
-      localStorage.setItem('user',JSON.stringify(result));
+      localStorage.setItem('user',JSON.stringify(result.result));
+      localStorage.setItem('token',JSON.stringify(result.auth));
   }
   return (
     <div className='signup'>

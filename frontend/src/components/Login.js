@@ -23,8 +23,9 @@ const Login = () => {
         });
         result = await result.json();
         console.warn(result);
-        if (result && result.name) {
-            localStorage.setItem('user', JSON.stringify(result));
+        if (result.auth) {
+            localStorage.setItem('user', JSON.stringify(result.user));
+            localStorage.setItem('token', JSON.stringify(result.auth));
             navigate('/');
         } else {
             alert('Please enter correct credentials');

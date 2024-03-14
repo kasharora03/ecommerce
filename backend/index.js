@@ -17,7 +17,12 @@ app.post('/register', async (req, res) => {
     delete result.password
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Pragma', 'no-cache');
-    res.send(result);
+    Jwt.sign({result},jwtkey,{expiresIn:"2h"},(err,token)=>{
+        if(err){
+            res.send('something went wrong')
+        }
+        res.send({ result, auth:token})
+    })
 }); 
 app.post('/login',async (req,res)=>{
     if(req.body.password && req.body.email){
@@ -28,7 +33,7 @@ app.post('/login',async (req,res)=>{
                 if(err){
                     res.send('something went wrong')
                 }
-                res.send(user,{auth:token})
+                res.send({ user, auth:token})
             })
         }else{
             res.send({result:'no user found'})
@@ -82,6 +87,26 @@ app.get('/search/:key',async(req,res)=>{
     });
     res.send(result);
 })
+function verifyToken(req,res,next){
+    let token = req.headers['authorization'];
+    if(token){
+        token = token.split(' ')[1];
+        console.warn('middle',token);
+        Jwt.verify(token,jwtkey,(err,success,valid)=>{
+            if(err){
+                res.status(403).send('please add valid token')
+            }else{
+                next(); 
+            }
+        })
+    }else{
+        res.status(403).send('please add token with header')
+    }
+    // token = token.split('')
+    
+    next();
+}
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
+    
 });
