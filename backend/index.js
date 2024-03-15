@@ -9,7 +9,7 @@ const jwtkey = 'e-comm';
 
 app.use(express.json());
 app.use(cors()); //to resolve api integration issue
-
+// post req
 app.post('/register', async (req, res) => {
     let newUser = new User(req.body);
     let result = await newUser.save();
